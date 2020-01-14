@@ -91,25 +91,29 @@ def restricted_resource_view_list(context, data_dict):
 def restricted_package_show(context, data_dict):
 
     print('NOW IN restricted_package_show: %s' % data_dict)
-    package_metadata = package_show(context, data_dict)
+    try:
+        package_metadata = package_show(context, data_dict)
 
-    # Ensure user who can edit can see the resource
-    if authz.is_authorized(
-            'package_update', context, package_metadata).get('success', False):
-        return package_metadata
+        # Ensure user who can edit can see the resource
+        if authz.is_authorized(
+                'package_update', context, package_metadata).get('success', False):
+            return package_metadata
 
-    # Custom authorization
-    if isinstance(package_metadata, dict):
-        restricted_package_metadata = dict(package_metadata)
-    else:
-        restricted_package_metadata = dict(package_metadata.for_json())
+        # Custom authorization
+        if isinstance(package_metadata, dict):
+            restricted_package_metadata = dict(package_metadata)
+        else:
+            restricted_package_metadata = dict(package_metadata.for_json())
 
-    # restricted_package_metadata['resources'] = _restricted_resource_list_url(
-    #     context, restricted_package_metadata.get('resources', []))
-    restricted_package_metadata['resources'] = _restricted_resource_list_hide_fields(
-        context, restricted_package_metadata.get('resources', []))
+        # restricted_package_metadata['resources'] = _restricted_resource_list_url(
+        #     context, restricted_package_metadata.get('resources', []))
+        restricted_package_metadata['resources'] = _restricted_resource_list_hide_fields(
+            context, restricted_package_metadata.get('resources', []))
 
-    return (restricted_package_metadata)
+        return (restricted_package_metadata)
+
+    except:
+        pass
 
 
 @side_effect_free

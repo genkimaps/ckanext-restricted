@@ -43,9 +43,8 @@ base_dir = os.path.dirname(os.path.realpath(__file__))
 log_file = os.path.join(base_dir, 'log_action.log')
 fh = logging.FileHandler(log_file)
 log.addHandler(fh)
+log.setLevel(logging.INFO)
 log.info('Log file: %s' % log_file)
-
-
 
 
 def restricted_user_create_and_notify(context, data_dict):
@@ -128,8 +127,8 @@ def restricted_package_show(context, data_dict):
 
     except:
         log.error('Error in restricted_package_show')
-        log.warning('context: %s' % context)
-        log.warning('data_dict: %s' % data_dict)
+        log.warning(u'context: %s' % context)
+        log.warning(u'data_dict: %s' % data_dict)
         pass
 
 

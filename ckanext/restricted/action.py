@@ -104,7 +104,7 @@ def restricted_resource_view_list(context, data_dict):
 @side_effect_free
 def restricted_package_show(context, data_dict):
 
-    log.info('NOW IN restricted_package_show: %s' % data_dict)
+    log.debug('NOW IN restricted_package_show: %s' % data_dict)
     try:
         package_metadata = package_show(context, data_dict)
 
@@ -129,6 +129,7 @@ def restricted_package_show(context, data_dict):
     except:
         log.error('Error in restricted_package_show')
         # log.warning(u'context: %s' % context)
+        log.warning(type(context))
         log.warning(u'data_dict: %s' % data_dict)
         pass
 

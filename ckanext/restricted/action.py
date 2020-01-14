@@ -33,6 +33,20 @@ _get_or_bust = ckan.logic.get_or_bust
 
 NotFound = ckan.logic.NotFound
 
+# Setup logging
+import logging
+import os
+screen_fmt = logging.Formatter(
+    '%(asctime)s:%(levelname)s:%(module)s(%(lineno)d) - %(message)s'
+)
+base_dir = os.path.dirname(os.path.realpath(__file__))
+log_file = os.path.join(base_dir, 'log_action.log')
+fh = logging.FileHandler(log_file)
+log.addHandler(fh)
+log.info('Log file: %s' % log_file)
+
+
+
 
 def restricted_user_create_and_notify(context, data_dict):
 
@@ -90,7 +104,7 @@ def restricted_resource_view_list(context, data_dict):
 @side_effect_free
 def restricted_package_show(context, data_dict):
 
-    print('NOW IN restricted_package_show: %s' % data_dict)
+    log.info('NOW IN restricted_package_show: %s' % data_dict)
     try:
         package_metadata = package_show(context, data_dict)
 
@@ -113,6 +127,9 @@ def restricted_package_show(context, data_dict):
         return (restricted_package_metadata)
 
     except:
+        log.error('Error in restricted_package_show')
+        log.warning('context: %s' % context)
+        log.warning('data_dict: %s' % data_dict)
         pass
 
 

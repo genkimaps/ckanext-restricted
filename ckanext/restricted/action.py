@@ -42,6 +42,7 @@ screen_fmt = logging.Formatter(
 base_dir = os.path.dirname(os.path.realpath(__file__))
 log_file = os.path.join(base_dir, 'log_action.log')
 fh = logging.FileHandler(log_file)
+fh.setFormatter(screen_fmt)
 log.addHandler(fh)
 log.setLevel(logging.INFO)
 log.info('Log file: %s' % log_file)

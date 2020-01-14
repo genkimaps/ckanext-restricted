@@ -128,7 +128,7 @@ def restricted_package_show(context, data_dict):
 
     except:
         log.error('Error in restricted_package_show')
-        log.warning(u'context: %s' % context)
+        # log.warning(u'context: %s' % context)
         log.warning(u'data_dict: %s' % data_dict)
         pass
 

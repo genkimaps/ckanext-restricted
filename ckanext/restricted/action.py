@@ -158,6 +158,14 @@ def restricted_package_search(context, data_dict):
 
     restricted_package_search_result = {}
 
+    log.info('restricted_package_search, context:')
+    for k, v in context.items():
+        try:
+            log.info(u'%s, %s' % (k, v))
+        except:
+            import traceback
+            log.error(traceback.format_exc())
+
     for key, value in package_search_result.items():
         if key == 'results':
             restricted_package_search_result_list = []

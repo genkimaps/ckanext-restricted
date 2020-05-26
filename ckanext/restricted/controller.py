@@ -160,6 +160,10 @@ class RestrictedController(toolkit.BaseController):
             pkg = toolkit.get_action('package_show')(
                 context, {'id': data_dict.get('package_name')})
             data_dict['pkg_dict'] = pkg
+            log.info('data_dict: ')
+            log.info(data_dict)
+            log.info('package: ')
+            log.info(pkg)
         except toolkit.ObjectNotFound:
             toolkit.abort(404, _('Dataset not found'))
         except Exception:

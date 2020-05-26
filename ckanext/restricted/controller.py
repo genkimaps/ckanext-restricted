@@ -25,6 +25,20 @@ import simplejson as json
 from logging import getLogger
 log = getLogger(__name__)
 
+# Setup logging
+import logging
+import os
+screen_fmt = logging.Formatter(
+    '%(asctime)s:%(levelname)s:%(module)s(%(lineno)d) - %(message)s'
+)
+base_dir = os.path.dirname(os.path.realpath(__file__))
+log_file = os.path.join(base_dir, 'restricted_controller.log')
+fh = logging.FileHandler(log_file)
+fh.setFormatter(screen_fmt)
+log.addHandler(fh)
+log.setLevel(logging.INFO)
+log.info('Log file: %s' % log_file)
+
 
 DataError = dictization_functions.DataError
 unflatten = dictization_functions.unflatten
@@ -88,6 +102,13 @@ class RestrictedController(toolkit.BaseController):
             headers = {
                 'CC': ",".join(email_dict.keys()),
                 'reply-to': data.get('user_email')}
+
+            log.info('extra_vars: ')
+            log.info(extra_vars)
+            log.info('email_dict: ')
+            log.info(email_dict)
+            log.info('headers: ')
+            log.info(headers)
 
             # CC doesn't work and mailer cannot send to multiple addresses
             for email, name in email_dict.iteritems():

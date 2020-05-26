@@ -40,7 +40,7 @@ screen_fmt = logging.Formatter(
     '%(asctime)s:%(levelname)s:%(module)s(%(lineno)d) - %(message)s'
 )
 base_dir = os.path.dirname(os.path.realpath(__file__))
-log_file = os.path.join(base_dir, 'log_action.log')
+log_file = os.path.join(base_dir, 'restricted_action.log')
 fh = logging.FileHandler(log_file)
 fh.setFormatter(screen_fmt)
 log.addHandler(fh)
@@ -158,10 +158,10 @@ def restricted_package_search(context, data_dict):
 
     restricted_package_search_result = {}
 
-    log.info('restricted_package_search, context:')
+    log.debug('restricted_package_search, context:')
     for k, v in context.items():
         try:
-            log.info(u'%s, %s' % (k, v))
+            log.debug(u'%s, %s' % (k, v))
         except:
             import traceback
             log.error(traceback.format_exc())

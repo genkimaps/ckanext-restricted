@@ -103,12 +103,12 @@ class RestrictedController(toolkit.BaseController):
                 'CC': ",".join(email_dict.keys()),
                 'reply-to': data.get('user_email')}
 
-            log.info('extra_vars: ')
-            log.info(extra_vars)
-            log.info('email_dict: ')
-            log.info(email_dict)
-            log.info('headers: ')
-            log.info(headers)
+            # log.info('extra_vars: ')
+            # log.info(extra_vars)
+            # log.info('email_dict: ')
+            # log.info(email_dict)
+            # log.info('headers: ')
+            # log.info(headers)
 
             # CC doesn't work and mailer cannot send to multiple addresses
             for email, name in email_dict.iteritems():
@@ -160,10 +160,10 @@ class RestrictedController(toolkit.BaseController):
             pkg = toolkit.get_action('package_show')(
                 context, {'id': data_dict.get('package_name')})
             data_dict['pkg_dict'] = pkg
-            log.info('data_dict: ')
-            log.info(data_dict)
-            log.info('package: ')
-            log.info(pkg)
+            # log.info('data_dict: ')
+            # log.info(data_dict)
+            # log.info('package: ')
+            # log.info(pkg)
         except toolkit.ObjectNotFound:
             toolkit.abort(404, _('Dataset not found'))
         except Exception:

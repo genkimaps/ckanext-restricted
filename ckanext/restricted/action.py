@@ -45,7 +45,7 @@ fh = logging.FileHandler(log_file)
 fh.setFormatter(screen_fmt)
 log.addHandler(fh)
 log.setLevel(logging.INFO)
-log.info('Log file: %s' % log_file)
+log.debug('Log file: %s' % log_file)
 
 
 def restricted_user_create_and_notify(context, data_dict):

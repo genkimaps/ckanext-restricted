@@ -125,67 +125,67 @@ def restricted_check_user_resource_access(user, resource_dict, package_dict):
         'msg': ('Resource access restricted to same '
                 'organization ({}) members').format(pkg_organization_id)}
 
-#def restricted_mail_allowed_user(user_id, resource):
-#    log.debug('restricted_mail_allowed_user: Notifying "{}"'.format(user_id))
-#    try:
-#        # Get user information
-#        context = {}
-#        context['ignore_auth'] = True
-#        context['keep_email'] = True
-#        user = toolkit.get_action('user_show')(context, {'id': user_id})
-#        user_email = user['email']
-#        user_name = user.get('display_name', user['name'])
-#        resource_name = resource.get('name', resource['id'])
-#
-#        # maybe check user[activity_streams_email_notifications]==True
-#
-#        mail_body = restricted_allowed_user_mail_body(user, resource)
-#        mail_subject = _('Access granted to resource {}').format(resource_name)
-#
+def restricted_mail_allowed_user(user_id, resource):
+    log.debug('restricted_mail_allowed_user: Notifying "{}"'.format(user_id))
+    try:
+        # Get user information
+        context = {}
+        context['ignore_auth'] = True
+        context['keep_email'] = True
+        user = toolkit.get_action('user_show')(context, {'id': user_id})
+        user_email = user['email']
+        user_name = user.get('display_name', user['name'])
+        resource_name = resource.get('name', resource['id'])
+
+        # maybe check user[activity_streams_email_notifications]==True
+
+        mail_body = restricted_allowed_user_mail_body(user, resource)
+        mail_subject = _('Access granted to resource {}').format(resource_name)
+
 #        # Send mail to user
 #        mailer.mail_recipient(user_name, user_email, mail_subject, mail_body)
-#
-#        # Send copy to admin
-#        mailer.mail_recipient(
-#            'CKAN Admin', config.get('email_to'),
-#            'Fwd: {}'.format(mail_subject), mail_body)
-#
-#    except Exception as e:
-#        log.warning(('restricted_mail_allowed_user: '
-#                     'Failed to send mail to "{0}": {1}').format(user_id,e))
-#
-#
-#def restricted_allowed_user_mail_body(user, resource):
-#    resource_link = toolkit.url_for(
-#        controller='package', action='resource_read',
-#        id=resource.get('package_id'), resource_id=resource.get('id'))
-#
-#    extra_vars = {
-#        'site_title': config.get('ckan.site_title'),
-#        'site_url': config.get('ckan.site_url'),
-#        'user_name': user.get('display_name', user['name']),
-#        'resource_name': resource.get('name', resource['id']),
-#        'resource_link': config.get('ckan.site_url') + resource_link,
-#        'resource_url': resource.get('url')}
-#
-#    return render_jinja2(
-#        'restricted/emails/restricted_user_allowed.txt', extra_vars)
-#
-#def restricted_notify_allowed_users(previous_value, updated_resource):
-#
-#    def _safe_json_loads(json_string, default={}):
-#        try:
-#            return json.loads(json_string)
-#        except Exception:
-#            return default
-#
-#    previous_restricted = _safe_json_loads(previous_value)
-#    updated_restricted = _safe_json_loads(updated_resource.get('restricted', ''))
-#
-#    # compare restricted users_allowed values
-#    updated_allowed_users = set(updated_restricted.get('allowed_users', '').split(','))
-#    if updated_allowed_users:
-#        previous_allowed_users = previous_restricted.get('allowed_users', '').split(',')
-#        for user_id in updated_allowed_users:
-#            if user_id not in previous_allowed_users:
-#                restricted_mail_allowed_user(user_id, updated_resource)
+
+        # Send copy to admin
+        mailer.mail_recipient(
+            'CKAN Admin', config.get('email_to'),
+            'Fwd: {}'.format(mail_subject), mail_body)
+
+    except Exception as e:
+        log.warning(('restricted_mail_allowed_user: '
+                     'Failed to send mail to "{0}": {1}').format(user_id,e))
+
+
+def restricted_allowed_user_mail_body(user, resource):
+    resource_link = toolkit.url_for(
+        controller='package', action='resource_read',
+        id=resource.get('package_id'), resource_id=resource.get('id'))
+
+    extra_vars = {
+        'site_title': config.get('ckan.site_title'),
+        'site_url': config.get('ckan.site_url'),
+        'user_name': user.get('display_name', user['name']),
+        'resource_name': resource.get('name', resource['id']),
+        'resource_link': config.get('ckan.site_url') + resource_link,
+        'resource_url': resource.get('url')}
+
+    return render_jinja2(
+        'restricted/emails/restricted_user_allowed.txt', extra_vars)
+
+def restricted_notify_allowed_users(previous_value, updated_resource):
+
+    def _safe_json_loads(json_string, default={}):
+        try:
+            return json.loads(json_string)
+        except Exception:
+            return default
+
+    previous_restricted = _safe_json_loads(previous_value)
+    updated_restricted = _safe_json_loads(updated_resource.get('restricted', ''))
+
+    # compare restricted users_allowed values
+    updated_allowed_users = set(updated_restricted.get('allowed_users', '').split(','))
+    if updated_allowed_users:
+        previous_allowed_users = previous_restricted.get('allowed_users', '').split(',')
+        for user_id in updated_allowed_users:
+            if user_id not in previous_allowed_users:
+                restricted_mail_allowed_user(user_id, updated_resource)

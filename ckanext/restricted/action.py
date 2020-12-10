@@ -195,6 +195,9 @@ def _restricted_resource_list_hide_fields(context, resource_list):
     for resource in resource_list:
         # copy original resource
         restricted_resource = dict(resource)
+        logger.info('Resource base fields: %s' % restricted_resource.keys())
+        logger.info('Resource extras: %s' %
+                    restricted_resource.get('extras').keys())
 
         # get the restricted fields
         restricted_dict = logic.restricted_get_restricted_dict(restricted_resource)
@@ -204,7 +207,7 @@ def _restricted_resource_list_hide_fields(context, resource_list):
             context, {'id': resource.get('id'), 'resource': resource}
             ).get('success', False)
 
-        # TODO: hide this resource *completely* if not authorized
+        # TODO: hide sensitive resource fields if not authorized
         if not authorized:
             logger.warning('Not authorized for resource: %s' % resource.get('title'))
             continue

@@ -217,7 +217,9 @@ def _restricted_resource_list_hide_fields(context, resource_list):
                 logger.warning('No extras')
 
             # Hide list of sensitive fields
-            # sensitive =
+            sensitive = ['map_preview_link']
+            for s in sensitive:
+                restricted_resource[s] = ''
 
         # hide other fields in restricted to everyone but dataset owner(s)
         if not authz.is_authorized(

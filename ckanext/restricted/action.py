@@ -217,7 +217,7 @@ def _restricted_resource_list_hide_fields(context, resource_list):
                 logger.warning('No extras')
 
             # Hide list of sensitive fields
-            sensitive = ['map_preview_link']
+            sensitive = ['map_preview_link', 'url']
             for s in sensitive:
                 restricted_resource[s] = ''
 

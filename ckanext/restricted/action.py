@@ -26,7 +26,7 @@ except ImportError:
     from pylons import config
 
 from logging import getLogger
-log = getLogger(__name__)
+logger = getLogger(__name__)
 
 
 _get_or_bust = ckan.logic.get_or_bust
@@ -43,9 +43,9 @@ base_dir = os.path.dirname(os.path.realpath(__file__))
 log_file = os.path.join(base_dir, 'restricted_action.log')
 fh = logging.FileHandler(log_file)
 fh.setFormatter(screen_fmt)
-log.addHandler(fh)
-log.setLevel(logging.INFO)
-log.debug('Log file: %s' % log_file)
+logger.addHandler(fh)
+logger.setLevel(logging.INFO)
+logger.info('Log file: %s' % log_file)
 
 
 def restricted_user_create_and_notify(context, data_dict):
@@ -80,8 +80,8 @@ def restricted_user_create_and_notify(context, data_dict):
         mail_recipient(name, email, subject, body)
 
     except MailerException as mailer_exception:
-        log.error('Cannot send mail after registration')
-        log.error(mailer_exception)
+        logger.error('Cannot send mail after registration')
+        logger.error(mailer_exception)
 
     return (user_dict)
 
@@ -104,7 +104,7 @@ def restricted_resource_view_list(context, data_dict):
 @side_effect_free
 def restricted_package_show(context, data_dict):
 
-    log.debug('NOW IN restricted_package_show: %s' % data_dict)
+    logger.debug('NOW IN restricted_package_show: %s' % data_dict)
     try:
         package_metadata = package_show(context, data_dict)
 
@@ -127,10 +127,10 @@ def restricted_package_show(context, data_dict):
         return (restricted_package_metadata)
 
     except:
-        log.error('Error in restricted_package_show')
+        logger.error('Error in restricted_package_show')
         # log.warning(u'context: %s' % context)
-        log.warning(type(context))
-        log.warning(u'data_dict: %s' % data_dict)
+        logger.warning(type(context))
+        logger.warning(u'data_dict: %s' % data_dict)
         pass
 
 
@@ -158,13 +158,13 @@ def restricted_package_search(context, data_dict):
 
     restricted_package_search_result = {}
 
-    log.debug('restricted_package_search, context:')
+    logger.debug('restricted_package_search, context:')
     for k, v in context.items():
         try:
-            log.debug(u'%s, %s' % (k, v))
+            logger.debug(u'%s, %s' % (k, v))
         except:
             import traceback
-            log.error(traceback.format_exc())
+            logger.error(traceback.format_exc())
 
     for key, value in package_search_result.items():
         if key == 'results':
@@ -203,6 +203,11 @@ def _restricted_resource_list_hide_fields(context, resource_list):
         authorized = auth.restricted_resource_show(
             context, {'id': resource.get('id'), 'resource': resource}
             ).get('success', False)
+
+        # TODO: hide this resource *completely* if not authorized
+        if not authorized:
+            logger.warning('Not authorized for resource: %s' % resource.get('title'))
+            continue
 
         # hide other fields in restricted to everyone but dataset owner(s)
         if not authz.is_authorized(

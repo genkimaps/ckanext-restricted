@@ -17,6 +17,7 @@ from ckan.logic import side_effect_free
 from ckanext.restricted import auth
 from ckanext.restricted import logic
 import json
+import traceback
 
 try:
     # CKAN 2.7 and later
@@ -128,6 +129,7 @@ def restricted_package_show(context, data_dict):
 
     except:
         logger.error('Error in restricted_package_show')
+        logger.error(traceback.format_exc())
         # log.warning(u'context: %s' % context)
         logger.warning(type(context))
         logger.warning(u'data_dict: %s' % data_dict)

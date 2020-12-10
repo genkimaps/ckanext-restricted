@@ -197,9 +197,6 @@ def _restricted_resource_list_hide_fields(context, resource_list):
     for resource in resource_list:
         # copy original resource
         restricted_resource = dict(resource)
-        logger.info('Resource base fields: %s' % restricted_resource.keys())
-        logger.info('Resource extras: %s' %
-                    restricted_resource.get('extras').keys())
 
         # get the restricted fields
         restricted_dict = logic.restricted_get_restricted_dict(restricted_resource)
@@ -212,7 +209,15 @@ def _restricted_resource_list_hide_fields(context, resource_list):
         # TODO: hide sensitive resource fields if not authorized
         if not authorized:
             logger.warning('Not authorized for resource: %s' % resource.get('title'))
-            continue
+            logger.info('Resource base fields: %s' % restricted_resource.keys())
+            extras = restricted_resource.get('extras')
+            if type(extras) is dict:
+                logger.info('Resource extras: %s' % extras.keys())
+            else:
+                logger.warning('No extras')
+
+            # Hide list of sensitive fields
+            # sensitive =
 
         # hide other fields in restricted to everyone but dataset owner(s)
         if not authz.is_authorized(
@@ -233,6 +238,9 @@ def _restricted_resource_list_hide_fields(context, resource_list):
             new_restricted = json.dumps({
                 'level': restricted_dict.get("level"),
                 'allowed_users': ','.join(allowed_users)})
+
+            # Resource extras may be stored in an 'extras' subdict, or at the root
+            # level of the resource dict.  This block handles both cases.
             extras_restricted = resource.get('extras', {}).get('restricted', {})
             if (extras_restricted):
                 restricted_resource['extras']['restricted'] = new_restricted
